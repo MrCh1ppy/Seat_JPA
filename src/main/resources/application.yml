@@ -1,0 +1,16 @@
+server:
+  port: 8083
+spring:
+  redis:
+    password: 737713
+    host: 47.98.206.89
+  datasource:
+    username: seat_jpa
+    password: KDmG2ACefaSRKsWP
+    url: jdbc:mysql://47.98.206.89:3306/seat_jpa
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
