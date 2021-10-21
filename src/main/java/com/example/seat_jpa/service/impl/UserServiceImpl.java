@@ -8,6 +8,7 @@ import com.example.seat_jpa.project.exception.ErrorInfoEnum;
 import com.example.seat_jpa.project.exception.ProjectException;
 import com.example.seat_jpa.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         if(param.getIsAdmin()!=null){
             builder.setIsAdmin(param.getIsAdmin());
         }
-        if(!param.getUsername().isBlank()){
+        if(Strings.isNotBlank(param.getUsername())){
             builder.setUsername(param.getUsername());
         }
         var target = builder.build();

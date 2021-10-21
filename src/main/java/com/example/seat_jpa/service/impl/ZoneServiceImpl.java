@@ -9,6 +9,7 @@ import com.example.seat_jpa.project.exception.ErrorInfoEnum;
 import com.example.seat_jpa.project.exception.ProjectException;
 import com.example.seat_jpa.service.ZoneService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,11 +71,11 @@ public class ZoneServiceImpl implements ZoneService {
     public Page<Zone> findZoneByFilter(@NotNull ZoneQueryParam param) {
         return zoneRepository.findAll((Specification<Zone>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (param.getName()!=null&&!param.getName().isBlank()) {
+            if (Strings.isNotBlank(param.getName())) {
                 predicates.add(criteriaBuilder
                         .like(root.get("name"), "%" + param.getName() + "%"));
             }
-            if (param.getAdminName()!=null&&!param.getAdminName().isBlank()) {
+            if (Strings.isNotBlank(param.getAdminName())) {
                 predicates.add(criteriaBuilder
                         .like(root
                         //获取Zone的admin属性

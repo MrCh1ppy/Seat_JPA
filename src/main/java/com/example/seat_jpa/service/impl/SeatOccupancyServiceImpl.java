@@ -1,7 +1,6 @@
 package com.example.seat_jpa.service.impl;
 
 import com.example.seat_jpa.dao.SeatRepository;
-import com.example.seat_jpa.dao.UserRepository;
 import com.example.seat_jpa.dao.ZoneRepository;
 import com.example.seat_jpa.entity.dto.AppealResponse;
 import com.example.seat_jpa.entity.dto.SeatRightResponse;
@@ -13,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,6 @@ import java.util.List;
 public class SeatOccupancyServiceImpl implements SeatOccupancyService {
     private SeatRepository seatRepository;
     private ZoneRepository zoneRepository;
-    private UserRepository userRepository;
     private RedisTemplate<String,String> redisTemplate;
     private static final String CONFIRM_QUEUE="c_queue";
     private static final String SECURITY_QUEUE="s_queue";
@@ -53,12 +53,6 @@ public class SeatOccupancyServiceImpl implements SeatOccupancyService {
     @Autowired
     public SeatOccupancyServiceImpl setZoneRepository(ZoneRepository zoneRepository) {
         this.zoneRepository = zoneRepository;
-        return this;
-    }
-
-    @Autowired
-    public SeatOccupancyServiceImpl setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
         return this;
     }
 
@@ -152,12 +146,26 @@ public class SeatOccupancyServiceImpl implements SeatOccupancyService {
 
     @Override
     public List<Seat> getCallList() {
-        return null;
+        var members = redisTemplate.opsForSet().members(CALL_SET);
+        if(members==null){
+            members=Collections.emptySet();
+        }
+        var list = new ArrayList<Integer>(members.size());
+        for (String member : members) {
+            list.add(Integer.parseInt(member));
+        }
+        return seatRepository.findAllById(list);
     }
 
     @Override
     public List<Seat> getCallList(Integer zoneId) {
-        return null;
+        var zoneRepositoryById = zoneRepository.findById(zoneId);
+        if(zoneRepositoryById.isEmpty()){throw new ProjectException(ErrorInfoEnum.PROJECT_ERROR,"该场所不存在");}
+        var targetZone = zoneRepositoryById.get();
+        var byZoneIdSeat = seatRepository.findAll(Example.of(new Seat().setZone(targetZone)));
+        var callListSeat = getCallList();
+        byZoneIdSeat.removeAll(callListSeat);
+        return byZoneIdSeat;
     }
 
     @Scheduled(fixedRate = 1000)
@@ -174,12 +182,10 @@ public class SeatOccupancyServiceImpl implements SeatOccupancyService {
         remove1=remove1==null?0:remove1;
         remove2=remove2==null?0:remove2;
         if(remove1>0||remove2>0){
-            var res = new StringBuilder("时间戳").append(cur)
-                    .append("安全区删除").append(remove1)
-                    .append("确认区删除").append(remove2)
-                    .append("传唤区新增").append(idSet.size())
-                    .toString();
-            System.out.println(res);
+            var res = "时间戳" + cur +
+                    "安全区删除" + remove1 +
+                    "确认区删除" + remove2 +
+                    "传唤区新增" + idSet.size();
             log.info(res);
         }
 

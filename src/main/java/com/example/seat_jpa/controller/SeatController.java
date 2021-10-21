@@ -3,6 +3,7 @@ package com.example.seat_jpa.controller;
 import com.example.seat_jpa.component.ApiResult;
 import com.example.seat_jpa.param.SeatAddParam;
 import com.example.seat_jpa.service.SeatService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ public class SeatController {
     }
 
     @PostMapping("/enroll")
-    public ApiResult<Integer> addSeat(SeatAddParam param){
+    public ApiResult<Integer> addSeat(@NotNull SeatAddParam param){
         var seatId = seatService.addSeat(param.getDescription(), param.getZoneId());
         return ApiResult.ok(seatId);
     }
