@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author 橙鼠鼠
  */
@@ -15,5 +17,6 @@ public class SeatAddParam {
     @ApiParam("描述")
     private String description;
     @ApiParam("场所ID")
+    @NotNull
     private Integer zoneId;
 }

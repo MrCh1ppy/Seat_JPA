@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.validation.constraints.Size;
+
 /**
  * @author 橙鼠鼠
  */
@@ -13,9 +15,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserEnrollParam{
         @ApiParam(required = true)
-        String username;
+        @Size(min = 1) String username;
         @ApiParam(required = true)
-        String password;
+        @Size(min = 1) String password;
         @ApiParam(required = true)
         Boolean isAdmin;
 }

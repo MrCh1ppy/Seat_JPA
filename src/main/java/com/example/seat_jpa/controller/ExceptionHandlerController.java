@@ -61,6 +61,4 @@ public class ExceptionHandlerController {
     ApiResult<String> projectExceptionHandler(ProjectException e){
         return defaultHandler(e,e.getCode(),e.getMessage());
     }
-
-
 }

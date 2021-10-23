@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * @author 橙鼠鼠
  */
@@ -12,7 +15,15 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserLoginParam{
-       @ApiParam(required = true) String username;
-       @ApiParam(required = true) String password;
-       @ApiParam(required = true) Boolean isAdmin;
+       @ApiParam(required = true)
+       @NotNull
+       @Size(min =1)
+       String username;
+       @ApiParam(required = true)
+       @Size(min = 1)
+       @NotNull
+       String password;
+       @ApiParam(required = true)
+       @NotNull
+       Boolean isAdmin;
 }
