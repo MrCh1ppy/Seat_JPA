@@ -5,6 +5,7 @@ import com.example.seat_jpa.param.SeatAddParam;
 import com.example.seat_jpa.service.SeatService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,7 @@ public class SeatController {
     }
 
     @PostMapping("/enroll")
-    public ApiResult<Integer> addSeat(@NotNull SeatAddParam param){
+    public ApiResult<Integer> addSeat(@Validated @NotNull SeatAddParam param){
         var seatId = seatService.addSeat(param.getDescription(), param.getZoneId());
         return ApiResult.ok(seatId);
     }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +29,14 @@ public class ZoneController {
     }
 
     @PostMapping("/query")
-    public ApiResult<Page<Zone>> getZoneInFilter(ZoneQueryParam param){
+    public ApiResult<Page<Zone>> getZoneInFilter(@Validated ZoneQueryParam param){
         var filter = zoneService.findZoneByFilter(param);
         return ApiResult.ok(filter);
     }
 
     @PostMapping("/add")
     @Operation(description = "添加场所")
-    public ApiResult<Integer>addZone(@NotNull ZoneAddParam param){
+    public ApiResult<Integer>addZone(@Validated @NotNull ZoneAddParam param){
         var id = zoneService.addZone(param.getDescription(), param.getName(), param.getAdminId());
         return ApiResult.ok(id);
     }

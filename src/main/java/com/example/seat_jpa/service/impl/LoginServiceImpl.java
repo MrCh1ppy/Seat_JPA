@@ -3,7 +3,7 @@ package com.example.seat_jpa.service.impl;
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import com.example.seat_jpa.dao.UserRepository;
-import com.example.seat_jpa.entity.dto.LoginResponse;
+import com.example.seat_jpa.entity.enum_package.LoginResponse;
 import com.example.seat_jpa.project.struct.LoginID;
 import com.example.seat_jpa.service.LoginService;
 import lombok.extern.slf4j.Slf4j;

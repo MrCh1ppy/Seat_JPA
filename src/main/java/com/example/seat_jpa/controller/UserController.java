@@ -11,6 +11,7 @@ import com.example.seat_jpa.service.UserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ApiResult<String> userLogin(@NotNull UserLoginParam param){
+    public ApiResult<String> userLogin(@Validated @NotNull UserLoginParam param){
         var response = loginService.login(param.getUsername(), param.getPassword(), param.getIsAdmin());
         ApiResult<String> res;
         res=switch (response){
@@ -50,13 +51,13 @@ public class UserController {
     }
 
     @PostMapping("/enroll")
-    public ApiResult<Integer>userEnroll(@NotNull UserEnrollParam param){
+    public ApiResult<Integer>userEnroll(@Validated @NotNull UserEnrollParam param){
         var id = userService.enroll(param.getUsername(), param.getPassword(), param.getIsAdmin());
         return ApiResult.ok(id);
     }
 
     @PostMapping("/query")
-    public ApiResult<Page<User>>findUserInFilter(@NotNull UserQueryParam param){
+    public ApiResult<Page<User>>findUserInFilter(@Validated @NotNull UserQueryParam param){
         var filter = userService.findUserInFilter(param);
         return ApiResult.ok(filter);
     }
